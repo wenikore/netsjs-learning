@@ -16,7 +16,8 @@ import { Event } from './event.entity';
       database:'nest-events',
       entities:[Event],
       synchronize: true
-    })
+    }),
+    TypeOrmModule.forFeature([Event]) //es necesario para haces ya inyeccion de dependencia
   ],
   controllers: [
     AppController,
