@@ -1,4 +1,4 @@
-import { Body, ConsoleLogger, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post } from '@nestjs/common';
+import { Body, ConsoleLogger, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, ValidationPipe } from '@nestjs/common';
 import { CreateEventDto } from './create-event.dto';
 import { UpdateEventDto } from './update-event.dto';
 import { Event } from './event.entity';
@@ -29,7 +29,7 @@ export class EventsController {
     }
 
     @Post('')
-    async create(@Body() input:CreateEventDto) {
+    async create(@Body(ValidationPipe) input:CreateEventDto) {
       return await this.repository.save({
             ...input,
             when: input.when ? new Date(input.when) : new Date,            
@@ -38,7 +38,7 @@ export class EventsController {
     }
 
     @Patch(':id')
-    async update(@Param('id') id, @Body() input:UpdateEventDto) {
+    async update(@Param('id') id, @Body(ValidationPipe) input:UpdateEventDto) {
        const event = await this.repository.findOne(id);
        return await this.repository.save({
               ...event,
