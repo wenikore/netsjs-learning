@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { EventsController } from './events.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Event } from './event.entity';
+import { Event } from './events/event.entity';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -17,11 +17,10 @@ import { Event } from './event.entity';
       entities:[Event],
       synchronize: true
     }),
-    TypeOrmModule.forFeature([Event]) //es necesario para haces ya inyeccion de dependencia
+    EventsModule 
   ],
   controllers: [
-    AppController,
-    EventsController
+    AppController
   ],
   providers: [AppService],
 })
