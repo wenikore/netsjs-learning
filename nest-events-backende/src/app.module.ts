@@ -6,17 +6,21 @@ import { Event } from './events/event.entity';
 import { EventsModule } from './events/events.module';
 import { AppJapanServices } from './app.japan.services';
 import { AppDummyServices } from './app.dummy';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(
+      //envFilePath: ['.production.env', '.staging.env'],
+    ), //es importante configurar para ver las para enviroments
     TypeOrmModule.forRoot({
       type:'mysql',
-      host:'172.18.0.4', //docker ip container
-      port: 3306,
-      username:'root',
-      password:'example',
-      database:'nest-events',
-      entities:[Event],
+      host:process.env.DB_HOST, //docker ip container
+      port: Number(process.env.DB_PORT),
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      entities:[Event], 
       synchronize: true
     }),
     EventsModule 
