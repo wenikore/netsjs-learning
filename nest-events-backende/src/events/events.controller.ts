@@ -1,14 +1,17 @@
-import { Body, ConsoleLogger, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, ConsoleLogger, Controller, Delete, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateEventDto } from './create-event.dto';
 import { UpdateEventDto } from './update-event.dto';
 import { Event } from './event.entity';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Like, MoreThan, Repository } from "typeorm";
+import { NotFoundError } from 'rxjs';
 
 @Controller({
     path: '/events'
 })
 export class EventsController {
+  
+  private readonly logger = new Logger(EventsController.name);
 
     constructor(
         @InjectRepository(Event)
@@ -18,13 +21,20 @@ export class EventsController {
 
     @Get('')
     async findAll() {
-        return await this.repository.find();
+        this.logger.log(`Hit the findAll route`);
+        const events =await this.repository.find();
+        this.logger.debug(`Found ${events.length}`);
+        return events;
     }
 
     @Get(':id')
     async findOne(@Param('id',ParseIntPipe) id:number) {
         // console.log(typeof id);
         const event = await this.repository.findOne(id);
+        if(!event){
+          throw new NotFoundException();
+        }
+
         return event;
     }
 
@@ -46,6 +56,12 @@ export class EventsController {
        @Body() input:UpdateEventDto
     ) {
        const event = await this.repository.findOne(id);
+
+       if(!event){
+        throw new NotFoundException();
+      }
+
+
        return await this.repository.save({
               ...event,
               ...input,
@@ -58,7 +74,11 @@ export class EventsController {
     @HttpCode(204)
     async remove(@Param('id') id) {
         const event = await this.repository.findOne(id);
+        if(!event){
+          throw new NotFoundException();
+        }
         await this.repository.remove(event);
+        
     }
 
     //se puede hacer consultar especificando el id

@@ -9,7 +9,7 @@ export class CreateEventDto {
     @Length(5,255)
     description: string;
     
-    @IsDateString()
+    //@IsDateString()
     when: string;
     
     //@Length(5,255, { groups:['create'] })    se indica que para create se permite 5 a 255
