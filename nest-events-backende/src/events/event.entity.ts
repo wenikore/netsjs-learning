@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn ,OneToMany } from "typeorm";
+import { Attendee } from "./attendee.entity";
 
 @Entity('event',{name:'event'})
 export class Event {
@@ -16,4 +17,10 @@ export class Event {
 
     @Column()
     address: string;
+
+    @OneToMany(() => Attendee,(attendee) => attendee.event,{
+        eager:true,
+        cascade:true //insercion en cascada y update
+    })
+    attendee:Attendee[];
 }
