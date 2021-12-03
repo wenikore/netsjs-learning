@@ -113,6 +113,17 @@ export class EventsController {
         return event;
     }
 
+    @Get('/attendee/:id')
+    async findOneAttendee(@Param('id',ParseIntPipe) id:number) {        
+        const event = await this.eventServices.getEventAttendee(id);
+        if(!event){
+          throw new NotFoundException();
+        }
+        return event;
+    }
+
+
+
     //@UsePipes()
     //new ValidationPipe({groups:['create']})
     @Post('')

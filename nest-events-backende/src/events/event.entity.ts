@@ -23,4 +23,13 @@ export class Event {
         cascade:true //insercion en cascada y update
     })
     attendee:Attendee[];
+
+    attendeeCount?:number;
+    
+    attendeeRejected?:number;
+    
+    attendeeMaybe?:number;
+    
+    attendeeAccepted?:number;
+    
 }
