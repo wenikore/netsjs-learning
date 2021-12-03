@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventsController } from './events.controller';
 import { Event } from './event.entity';
 import { Attendee } from './attendee.entity';
+import { EventServices } from './events.services';
 
 //it is static module
 @Module({
@@ -11,6 +12,7 @@ import { Attendee } from './attendee.entity';
     ],
     controllers:[
         EventsController
-    ]
+    ],
+    providers: [EventServices]
 })
 export class EventsModule {}
