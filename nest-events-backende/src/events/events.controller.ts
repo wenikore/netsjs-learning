@@ -109,10 +109,6 @@ export class EventsController {
         return events;
     }
 
-
-
-
-
     @Get('')
     async findAll(@Query() filter: ListEvent) {
         this.logger.debug(filter);
@@ -142,8 +138,6 @@ export class EventsController {
         }
         return event;
     }
-
-
 
     //@UsePipes()
     //new ValidationPipe({groups:['create']})
@@ -179,13 +173,12 @@ export class EventsController {
 
     @Delete(':id')
     @HttpCode(204)
-    async remove(@Param('id') id) {
-        const event = await this.repository.findOne(id);
-        if(!event){
+    async remove(@Param('id') id) {        
+     const result= await this.eventServices.deleteEvent(id);
+        if(result.affected!==1){
           throw new NotFoundException();
         }
-        await this.repository.remove(event);
-        
+      return result;        
     }
 
    
