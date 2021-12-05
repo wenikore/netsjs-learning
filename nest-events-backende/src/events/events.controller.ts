@@ -95,6 +95,23 @@ export class EventsController {
       .getMany();
     }
 
+    @Get('/paginator')
+    @UsePipes(new ValidationPipe({transform:true})) //error por falta de aprametro offset
+    async findAllpaginator(@Query() filter: ListEvent) {
+        this.logger.debug(filter);        
+        const events = await this.eventServices
+              .getEventsWithAttendeeCountfilteredPaginatorServices(filter,{
+                limit:2,
+                currentPage:filter.page,
+                total:true
+              });
+        this.logger.debug(`Found ${events.data.length}`);
+        return events;
+    }
+
+
+
+
 
     @Get('')
     async findAll(@Query() filter: ListEvent) {
