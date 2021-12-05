@@ -1,5 +1,7 @@
 import { Controller, Logger, Post } from "@nestjs/common";
 import { InjectRepository } from '@nestjs/typeorm';
+import { Profile } from "src/auth/profile.entity";
+import { User } from "src/auth/user.entity";
 import { Repository } from 'typeorm';
 import { Subject } from "./subject.entity";
 import { Teacher } from "./teacher.entity";
@@ -14,6 +16,8 @@ export class TrainingController {
     private readonly subjectRepository: Repository<Subject>,
     @InjectRepository(Teacher)
     private readonly teacherRepository: Repository<Teacher>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) { }
 
   @Post('/create')
@@ -79,4 +83,25 @@ export class TrainingController {
 
 
   }
+
+  @Post('/user')
+  public async savingUserOneToOne() {
+    //How to use One to One
+    const user = new User();
+    user.firstName='jhon'
+    user.lastName='chaparro'
+    user.email='jhon@nestjs.com'
+    user.password='123Xmi'
+    user.username='jhon'
+    const profile = new Profile();
+    profile.age=12
+    user.profile = profile;
+    //user.profile = null;
+    //Save the user here
+    this.userRepository.save(user)
+
+
+  }
+  
+
 }
