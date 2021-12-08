@@ -1,4 +1,5 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Event } from "src/events/event.entity";
+import { Column, Entity, JoinColumn, OneToOne,OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Profile } from "./profile.entity";
 
 
@@ -7,13 +8,13 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({unique:true})
   username: string;
 
   @Column()
   password: string;
 
-  @Column()
+  @Column({unique:true})
   email: string;
 
   @Column()
@@ -27,4 +28,8 @@ export class User {
   })
   @JoinColumn()
   profile: Profile;
+
+  @OneToMany(() => Event,(event)=> event.organizer)
+  organized:Event[]
+
 }

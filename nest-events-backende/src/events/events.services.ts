@@ -5,6 +5,8 @@ import { AttendeeAnswerEnum } from "./attendee.entity";
 import { Event } from './event.entity';
 import { paginate, PaginateOptions } from 'src/pagination/paginator';
 import { ListEvent, WhenEventFilter } from "./input/list.event";
+import { CreateEventDto } from "./input/create-event.dto";
+import { User } from "src/auth/user.entity";
 
 
 @Injectable()
@@ -151,5 +153,14 @@ export class EventServices{
         .where('id = :id',{id})
         .execute();
     }
+
+    public async createEvent(input:CreateEventDto,user:User):Promise<Event>{
+        return await this.eventsRepository.save({
+            ...input,
+            organizer:user,
+            when: input.when ? new Date(input.when) : new Date,            
+        })
+    }
+
 
 }

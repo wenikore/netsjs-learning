@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn ,OneToMany } from "typeorm";
+import { User } from "src/auth/user.entity";
+import { Column, Entity,ManyToOne, JoinColumn,PrimaryGeneratedColumn ,OneToMany } from "typeorm";
 import { Attendee } from "./attendee.entity";
 
 @Entity('event',{name:'event'})
@@ -23,6 +24,13 @@ export class Event {
         cascade:true //insercion en cascada y update
     })
     attendee:Attendee[];
+
+    @ManyToOne(()=> User,(user)=> user.organized)
+    @JoinColumn({name:'organizerId'})
+    organizer:User;
+
+    @Column({nullable:true})
+    organizerId:number;
 
     attendeeCount?:number;
     
