@@ -1,4 +1,4 @@
-import { BadRequestException, Body,  Controller, Delete, ForbiddenException, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body,  ClassSerializerInterceptor,  Controller, Delete, ForbiddenException, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, SerializeOptions, UseGuards, UseInterceptors, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateEventDto } from './input/create-event.dto';
 import { UpdateEventDto } from './input/update-event.dto';
 import { Event } from './event.entity';
@@ -15,6 +15,9 @@ import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
 
 @Controller({
     path: '/events'
+})
+@SerializeOptions({
+  strategy: 'excludeAll'
 })
 export class EventsController {
   
@@ -116,6 +119,7 @@ export class EventsController {
 
 
     @Get('')
+    @UseInterceptors(ClassSerializerInterceptor)
     async findAll(@Query() filter: ListEvent) {
         this.logger.debug(filter);
         this.logger.log(`Hit the findAll route`);
@@ -126,6 +130,7 @@ export class EventsController {
     }
 
     @Get(':id')
+    @UseInterceptors(ClassSerializerInterceptor)
     async findOne(@Param('id',ParseIntPipe) id:number) {
         // console.log(typeof id);
         const event = await this.eventServices.getEvent(id);
@@ -137,6 +142,7 @@ export class EventsController {
     }
 
     @Get('/attendee/:id')
+    @UseInterceptors(ClassSerializerInterceptor)
     async findOneAttendee(@Param('id',ParseIntPipe) id:number) {        
         const event = await this.eventServices.getEventAttendee(id);
         if(!event){
@@ -150,6 +156,7 @@ export class EventsController {
     //new ValidationPipe({groups:['create']})
     @Post('') 
     @UseGuards(AuthGuardJwt)
+    @UseInterceptors(ClassSerializerInterceptor)
     async create(
       @Body() input:CreateEventDto,
       @CurrentUser() user:User)
@@ -160,6 +167,7 @@ export class EventsController {
     //new ValidationPipe({groups:['update']})
     @Patch(':id')
     @UseGuards(AuthGuardJwt)
+    @UseInterceptors(ClassSerializerInterceptor)
     async update(
        @Param('id') id,
        @Body() input:UpdateEventDto,
