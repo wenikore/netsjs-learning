@@ -103,6 +103,7 @@ export class EventsController {
 
     @Get('/paginator')
     @UsePipes(new ValidationPipe({transform:true})) //error por falta de aprametro offset
+    @UseInterceptors(ClassSerializerInterceptor)
     async findAllpaginator(@Query() filter: ListEvent) {
         this.logger.debug(filter);        
         const events = await this.eventServices
