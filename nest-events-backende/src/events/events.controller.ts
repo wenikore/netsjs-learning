@@ -1,4 +1,4 @@
-import { Body,  Controller, Delete, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
+import { BadRequestException, Body,  Controller, Delete, ForbiddenException, Get, HttpCode, Logger, NotFoundException, Param, ParseIntPipe, Patch, Post, Query, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateEventDto } from './input/create-event.dto';
 import { UpdateEventDto } from './input/update-event.dto';
 import { Event } from './event.entity';
@@ -29,8 +29,8 @@ export class EventsController {
       
     ){}
 
-
- //se puede hacer consultar especificando el id
+ //====================Ejemplos de consultas====================
+    //se puede hacer consultar especificando el id
     //select * from event where event.id=3
     @Get('/practice')
     async practice() {
@@ -112,6 +112,9 @@ export class EventsController {
         return events;
     }
 
+  //====================Ejemplos de consultas FIN====================
+
+
     @Get('')
     async findAll(@Query() filter: ListEvent) {
         this.logger.debug(filter);
@@ -142,6 +145,7 @@ export class EventsController {
         return event;
     }
 
+    //===============================Guard and auth======================================
     //@UsePipes()
     //new ValidationPipe({groups:['create']})
     @Post('') 
@@ -155,35 +159,48 @@ export class EventsController {
 
     //new ValidationPipe({groups:['update']})
     @Patch(':id')
+    @UseGuards(AuthGuardJwt)
     async update(
        @Param('id') id,
-       @Body() input:UpdateEventDto
+       @Body() input:UpdateEventDto,
+       @CurrentUser() user:User
     ) {
-       const event = await this.repository.findOne(id);
+       const event = await this.eventServices.getEvent(id);
 
-       if(!event){
+      if(!event){
         throw new NotFoundException();
       }
 
-
-       return await this.repository.save({
-              ...event,
-              ...input,
-              when: input.when ? new Date(input.when) : new Date,            
-          });
-        
+      if(event.organizerId !== user.id){
+        throw new ForbiddenException(
+          null,`You are not authorized to change this event`
+        )
+      }
+      return await this.eventServices.update(event,input);        
     }
 
     @Delete(':id')
+    @UseGuards(AuthGuardJwt)
     @HttpCode(204)
-    async remove(@Param('id') id) {        
-     const result= await this.eventServices.deleteEvent(id);
+    async remove(
+      @Param('id') id,
+      @CurrentUser() user:User) {        
+     const event = await this.eventServices.getEvent(id);
+
+     if(!event){
+      throw new NotFoundException();
+    }
+
+    if(event.organizerId !== user.id){
+      throw new ForbiddenException(
+        null,`You are not authorized to remove this event`
+      )
+    }    
+    const result= await this.eventServices.deleteEvent(id);
         if(result.affected!==1){
           throw new NotFoundException();
         }
       return result;        
-    }
-
-   
+    } 
 
 }
