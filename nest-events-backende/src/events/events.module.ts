@@ -4,6 +4,10 @@ import { EventsController } from './events.controller';
 import { Event } from './event.entity';
 import { Attendee } from './attendee.entity';
 import { EventServices } from './events.services';
+import { EventAttendeesController } from './event-attendees.controller';
+import { AttendeesService } from './attendees.service';
+import { EventsOrganizedByUserController } from './events-organized-by-user.controller';
+import { CurrentUserEventAttendanceController } from './current-user-event-attendance.controller';
 
 //it is static module
 @Module({
@@ -11,8 +15,11 @@ import { EventServices } from './events.services';
         TypeOrmModule.forFeature([Event,Attendee]), //es necesario para haces ya inyeccion de dependencia
     ],
     controllers:[
-        EventsController
+        EventsController,
+        EventAttendeesController,
+        EventsOrganizedByUserController,
+        CurrentUserEventAttendanceController
     ],
-    providers: [EventServices]
+    providers: [EventServices,AttendeesService]
 })
 export class EventsModule {}

@@ -1,7 +1,8 @@
 import { Expose } from "class-transformer";
+import { User } from "src/auth/user.entity";
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne,JoinColumn } from "typeorm";
 import { Event } from "./event.entity";
-
+ 
 export enum AttendeeAnswerEnum {
     Accepted = 1,
     Maybe,
@@ -15,15 +16,18 @@ export class Attendee{
     @Expose()
     id:number;
 
-    @Column()
-    @Expose()
-    name:string
+    // @Column()
+    // @Expose()
+    // name:string
 
     @ManyToOne(() => Event, (event) => event.attendee,{
         nullable:false
     })
     @JoinColumn(/*{name:'event_id', referencedColumnName:'secondary'}*/)
     event:Event
+
+    @Column()
+    eventId:number;
 
     @Column('enum',{
         enum:AttendeeAnswerEnum,
@@ -32,4 +36,10 @@ export class Attendee{
     @Expose()
     answer : AttendeeAnswerEnum
 
+    @ManyToOne(()=>User,(user)=>user.attended)
+    @Expose()    
+    user:User
+
+    @Column()
+    userId:number;
 }

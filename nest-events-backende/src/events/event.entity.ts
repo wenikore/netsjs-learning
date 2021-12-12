@@ -2,9 +2,16 @@ import { Expose } from "class-transformer";
 import { User } from "src/auth/user.entity";
 import { Column, Entity,ManyToOne, JoinColumn,PrimaryGeneratedColumn ,OneToMany } from "typeorm";
 import { Attendee } from "./attendee.entity";
+import { PaginationResult } from "src/pagination/paginator";
+
 
 @Entity('event',{name:'event'})
 export class Event {
+    constructor(partial?: Partial<Event>) {
+        Object.assign(this, partial);
+    }
+
+
     @PrimaryGeneratedColumn()
     @Expose()
     id:number
@@ -13,7 +20,8 @@ export class Event {
     @Expose()
     name: string;
 
-    @Column()@Expose()
+    @Column()
+    @Expose()
     description: string;
 
     @Column({name:'when_date'})
@@ -51,3 +59,5 @@ export class Event {
     attendeeAccepted?:number;
     
 }
+
+export type PaginatedEvents = PaginationResult<Event>; 
