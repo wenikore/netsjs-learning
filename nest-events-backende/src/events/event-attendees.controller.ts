@@ -2,7 +2,7 @@ import { ClassSerializerInterceptor, Controller, Get, Param, ParseIntPipe, Seria
 import { AttendeesService } from "./attendees.service";
 
 @Controller('events/:eventId/attendees')
-@SerializeOptions({strategy:'excludeAll'})
+@SerializeOptions({strategy:'excludeAll'}) 
 export class EventAttendeesController{
     constructor(
         private readonly attendeesService: AttendeesService

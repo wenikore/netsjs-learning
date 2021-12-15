@@ -7,7 +7,7 @@ import { AttendeesService } from "./attendees.service";
 import { EventServices } from "./events.services";
 import { CreateAttendeeDto } from "./input/create-attendee.dto";
 
-@Controller('events-attendance')
+@Controller('events-attendance') 
 @SerializeOptions({ strategy: 'excludeAll' })
 export class CurrentUserEventAttendanceController {
     constructor(
