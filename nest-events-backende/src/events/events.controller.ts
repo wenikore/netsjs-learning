@@ -7,9 +7,9 @@ import { Like, MoreThan, Repository } from "typeorm";
 import { Attendee } from './attendee.entity';
 import { EventServices } from './events.services';
 import { ListEvent } from './input/list.event';
-import { CurrentUser } from 'src/auth/current-user.decorator';
-import { User } from 'src/auth/user.entity';
-import { AuthGuardJwt } from 'src/auth/auth-guard.jwt';
+import { CurrentUser } from './../auth/current-user.decorator';
+import { User } from './../auth/user.entity';
+import { AuthGuardJwt } from './../auth/auth-guard.jwt';
 
 
 

@@ -1,7 +1,7 @@
 import { Body, ClassSerializerInterceptor, Controller, DefaultValuePipe, Get, NotFoundException, Param, ParseIntPipe, Post, Put, Query, SerializeOptions, UseGuards, UseInterceptors } from "@nestjs/common";
 import { query } from "express";
-import { CurrentUser } from "src/auth/current-user.decorator";
-import { User } from "src/auth/user.entity";
+import { CurrentUser } from "./../auth/current-user.decorator";
+import { User } from "./../auth/user.entity";
 import { AuthGuardJwt } from './../auth/auth-guard.jwt';
 import { AttendeesService } from "./attendees.service";
 import { EventServices } from "./events.services";
