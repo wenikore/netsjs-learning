@@ -17,6 +17,7 @@ export default registerAs(
         password: process.env.DB_PASSWORD,
         database: process.env.DB_NAME,
         entities:[Event,Attendee,Subject,Teacher,User,Profile], 
-        synchronize: false
-    })
+        synchronize: false,
+        dropSchema: false
+    }) 
 );
