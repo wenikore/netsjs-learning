@@ -7,8 +7,8 @@ import { AppJapanServices } from './app.japan.services';
 import { AppDummyServices } from './app.dummy';
 import { ConfigModule } from '@nestjs/config';
 import { SchoolModule } from './school/school.module';
-import ormConfig from 'src/config/orm.config';
-import ormConfigProd from 'src/config/orm.config.prod';
+import ormConfig from './config/orm.config';
+import ormConfigProd from './config/orm.config.prod';
 import { AuthModule } from './auth/auth.module';
 
 @Module({
@@ -18,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
       isGlobal:true,
       load:[ormConfig],
       expandVariables : true,
+      envFilePath: `${process.env.NODE_ENV}.env`
       
     }), //es importante configurar para ver las para enviroments
     TypeOrmModule.forRootAsync({  //la db se cargara como factory que esta en un archivo 
